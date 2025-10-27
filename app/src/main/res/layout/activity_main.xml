@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:text="Monza Radio"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvFrequency"
+        android:text="-- MHz"
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvRds"
+        android:text="Station: --"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/tvFrequency"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <SeekBar
+        android:id="@+id/seekFreq"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:max="205"
+        app:layout_constraintTop_toBottomOf="@id/tvRds"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
+
+    <LinearLayout
+        android:id="@+id/controls"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/seekFreq"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/btnScan"
+            android:src="@android:drawable/ic_menu_search"
+            android:contentDescription="Scan"
+            android:layout_width="56dp"
+            android:layout_height="56dp"/>
+
+        <ToggleButton
+            android:id="@+id/togglePlay"
+            android:textOn="On"
+            android:textOff="Off"
+            android:layout_marginStart="8dp"
+            android:layout_width="72dp"
+            android:layout_height="56dp"/>
+
+        <ToggleButton
+            android:id="@+id/toggleSpeaker"
+            android:textOn="Speaker"
+            android:textOff="Speaker"
+            android:layout_marginStart="8dp"
+            android:layout_width="96dp"
+            android:layout_height="56dp"/>
+
+        <ImageButton
+            android:id="@+id/btnFav"
+            android:src="@android:drawable/btn_star_big_off"
+            android:contentDescription="Favorite"
+            android:layout_marginStart="8dp"
+            android:layout_width="56dp"
+            android:layout_height="56dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/volBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnVolDown"
+            android:src="@android:drawable/ic_media_previous"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <TextView
+            android:id="@+id/tvVolume"
+            android:text="Vol 50%"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <ImageButton
+            android:id="@+id/btnVolUp"
+            android:src="@android:drawable/ic_media_next"
+            android:layout_width="48dp"
+            android:layout_height="48dp"/>
+
+        <ToggleButton
+            android:id="@+id/toggleMute"
+            android:textOn="Muted"
+            android:textOff="Mute"
+            android:layout_marginStart="16dp"
+            android:layout_width="72dp"
+            android:layout_height="48dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvFavLabel"
+        android:text="Favorites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/volBox"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvFavorites"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tvFavLabel"
+        app:layout_constraintBottom_toTopOf="@+id/streamRow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"/>
+
+    <LinearLayout
+        android:id="@+id/streamRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
+
+        <EditText
+            android:id="@+id/etStreamUrl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Stream URL (m3u/mp3)"
+            android:text="https://stream-uk1.radioparadise.com/aac-320" />
+
+        <Button
+            android:id="@+id/btnStreamPlay"
+            android:text="Play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
