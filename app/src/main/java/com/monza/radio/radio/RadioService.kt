@@ -1,6 +1,6 @@
-
 package com.monza.radio.radio
 
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -8,9 +8,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.media.session.MediaButtonReceiver
+import androidx.media.app.NotificationCompat.MediaStyle
 import android.support.v4.media.session.MediaSessionCompat
 import android.content.Context
+import com.monza.radio.R
 
 class RadioService : Service() {
 
@@ -38,13 +39,14 @@ class RadioService : Service() {
 
     override fun onBind(intent: Intent?): IBinder? = null
 
-    private fun buildNotification(): android.app.Notification {
+    private fun buildNotification(): Notification {
         val builder = NotificationCompat.Builder(this, CHANNEL_ID)
             .setContentTitle("Monza Radio")
             .setContentText("Playing")
-            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setSmallIcon(R.drawable.ic_play)
             .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setStyle(androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken))
+            .setStyle(MediaStyle().setMediaSession(mediaSession.sessionToken))
+            .setOngoing(true)
         return builder.build()
     }
 

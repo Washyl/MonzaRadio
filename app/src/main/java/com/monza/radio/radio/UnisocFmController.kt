@@ -1,4 +1,3 @@
-
 package com.monza.radio.radio
 
 import android.content.Context
@@ -32,6 +31,9 @@ class UnisocFmController private constructor(private val ctx: Context) {
         }
     }
 
+    // If true, force simulation regardless of reflection detection
+    @Volatile private var forceMockMode: Boolean = false
+
     private val isMockMode: Boolean by lazy { !isUnisocPresent }
 
     // State
@@ -50,11 +52,17 @@ class UnisocFmController private constructor(private val ctx: Context) {
         }
     }
 
-    fun hasHardware(): Boolean = !isMockMode
+    // Public: force mock mode (useful for emulator/testing)
+    fun forceMock(force: Boolean) {
+        forceMockMode = force
+        Log.i(TAG, "forceMockMode = $force")
+    }
+
+    fun hasHardware(): Boolean = !(isMockMode || forceMockMode)
 
     fun open() {
-        Log.i(TAG, "open() unisoc=$isUnisocPresent mock=$isMockMode")
-        if (isMockMode) return
+        Log.i(TAG, "open() unisoc=$isUnisocPresent mock=${isMockMode || forceMockMode}")
+        if (isMockMode || forceMockMode) return
         try {
             val cls = Class.forName("com.unisoc.fmradio.FmNative")
             val method = cls.getDeclaredMethod("initFM", Context::class.java)
@@ -69,7 +77,7 @@ class UnisocFmController private constructor(private val ctx: Context) {
     fun close() {
         Log.i(TAG, "close()")
         stopSimulation()
-        if (!isMockMode) {
+        if (!(isMockMode || forceMockMode)) {
             try {
                 val cls = Class.forName("com.unisoc.fmradio.FmNative")
                 val method = cls.getDeclaredMethod("closeFM")
@@ -83,9 +91,9 @@ class UnisocFmController private constructor(private val ctx: Context) {
 
     fun tune(freq: Float) {
         val f = round(freq * 10) / 10f
-        Log.i(TAG, "tune -> $f MHz (mock=$isMockMode)")
+        Log.i(TAG, "tune -> $f MHz (mock=${isMockMode || forceMockMode})")
         currentFreq = f
-        if (!isMockMode) {
+        if (!(isMockMode || forceMockMode)) {
             try {
                 val cls = Class.forName("com.unisoc.fmradio.FmNative")
                 val method = cls.getDeclaredMethod("tune", Float::class.javaPrimitiveType)
@@ -115,7 +123,7 @@ class UnisocFmController private constructor(private val ctx: Context) {
     fun getCurrentFrequency(): Float = currentFreq
 
     fun getRdsProgramName(): String? {
-        if (isMockMode) {
+        if (isMockMode || forceMockMode) {
             return when (((currentFreq * 10).toInt() % 7)) {
                 0 -> "Monza FM"
                 1 -> "Road Radio"
@@ -145,7 +153,7 @@ class UnisocFmController private constructor(private val ctx: Context) {
         var f = start
         while (f <= end) {
             tune(f)
-            val found = if (isMockMode) {
+            val found = if (isMockMode || forceMockMode) {
                 ((f * 10).toInt() % 5 == 0)
             } else {
                 try {

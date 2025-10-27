@@ -1,4 +1,3 @@
-
 package com.monza.radio.favorites
 
 import android.view.LayoutInflater
@@ -7,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.monza.radio.R
 
 class FavoritesAdapter(private val onClick: (Float) -> Unit)
     : ListAdapter<Float, FavoritesAdapter.VH>(DIFF) {
@@ -19,8 +19,8 @@ class FavoritesAdapter(private val onClick: (Float) -> Unit)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
-        val v = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
-        return VH(v)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_favorite_chip, parent, false)
+        return VH(v as TextView)
     }
 
     override fun onBindViewHolder(holder: VH, position: Int) {
@@ -28,11 +28,10 @@ class FavoritesAdapter(private val onClick: (Float) -> Unit)
         holder.bind(freq)
     }
 
-    inner class VH(view: android.view.View) : RecyclerView.ViewHolder(view) {
-        private val tv = view.findViewById<TextView>(android.R.id.text1)
+    inner class VH(private val tv: TextView) : RecyclerView.ViewHolder(tv) {
         fun bind(freq: Float) {
             tv.text = String.format("%.1f MHz", freq)
-            itemView.setOnClickListener { onClick(freq) }
+            tv.setOnClickListener { onClick(freq) }
         }
     }
 }
